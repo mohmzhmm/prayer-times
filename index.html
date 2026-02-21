@@ -5,8 +5,11 @@
     <title>مواقيت مسجد الخليل</title>
     <style>
         body { 
-            margin: 0; padding: 0; 
-            background: linear-gradient(to bottom, #2c5364, #203a43, #0f2027);
+             margin: 0; padding: 0; 
+            /* هذا هو التعديل المطلوب */
+            background: url('3.png') no-repeat center center fixed; 
+            background-size: cover; 
+            /* نهاية التعديل */
             color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; 
             height: 100vh; overflow: hidden; 
             display: flex; flex-direction: column; align-items: center; 
@@ -34,7 +37,7 @@
         }
 
         .countdown-time { font-size: 7rem; font-weight: bold; color: #ffca28; font-family: sans-serif; }
-        .swedish-text { display: block; font-size: 0.45em; color: #aaa; margin-top: 4px; }
+        .swedish-text { display: block; font-size: 0.45em; color: #aaa; margin-top: 6px; }
         .next-day-note { color: #ffca28; font-size: 0.8em; margin-right: 10px; font-weight: bold; }
 
         .prayer-table {
@@ -46,21 +49,49 @@
         .prayer-table th { background-color: rgba(255,202,40,0.15); color: #ffca28; }
         .active-row { background-color: rgba(255, 202, 40, 0.4) !important; font-weight: bold; }
 
-        /* صور أسفل الصفحة */
-        .bottom-images-bar {
-            position: fixed; bottom: 20px; left: 50%;
-            transform: translateX(-50%);
-            display: flex; gap: 20px; z-index: 5;
-        }
-        .bottom-images-bar img {
-            height: 95px; width: auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            border: 2px solid rgba(255,202,40,0.3);
-        }
+/* ===== الشريط السفلي الجديد ===== */
+
+              .bottom-images-bar {
+                  position: fixed;
+                  bottom: 20px;
+                  left: 0;
+                  width: 85%;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  padding: 0 230px;
+                  z-index: 5;
+              }
+
+              .left-image img,
+              .right-image img {
+                height: 320px;
+                width: auto;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0);
+                border: none;   /* تم إزالة الإطار */
+             }
+
+            .center-text {
+               text-align: center;
+               max-width: 1200px;
+               font-size: 2rem;     /* تكبير النص */
+                  line-height: 2.2;
+               color: #ffca28;
+               font-weight: bold;
+                  text-shadow: 0 0 20px rgba(255,202,40,1.6);
+             }
 
         .logo-container { position: fixed; bottom: 20px; right: 20px; text-align: center; z-index: 10; }
         .logo-img { width: 100px; }
+               .middle-text {
+    max-width: 620px;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    text-align: center;
+    color: #ffca28;
+    font-weight: bold;
+}
     </style>
 </head>
 <body>
@@ -99,15 +130,29 @@
 
     <!-- الصور الثلاث -->
     <div class="bottom-images-bar">
-        <img src="1.jpg" alt="1" onerror="this.style.display='none'">
-        <img src="2.png" alt="2" onerror="this.style.display='none'">
-        <img src="3.jpg" alt="3" onerror="this.style.display='none'">
+
+    <div class="left-image">
+        <img src="1.png">
     </div>
 
-    <div class="logo-container">
-        <img src="logo.png" class="logo-img" onerror="this.style.display='none'">
-        <span style="display:block; color:#ffca28; font-size: 0.9rem;">Alkhaleel Moskén</span>
+    <div class="center-text">
+        <div class="bismillah">
+            بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ
+        </div>
+
+        <div class="ayah-text">
+           مَّثَلُ ٱلَّذِینَ یُنفِقُونَ أَمۡوَ ٰ⁠لَهُمۡ فِی سَبِیلِ ٱللَّهِ كَمَثَلِ حَبَّةٍ أَنۢبَتَتۡ سَبۡعَ سَنَابِلَ
+            فِی كُلِّ سُنۢبُلَةࣲ مِّاْئَةُ حَبَّةࣲۗ وَٱللَّهُ یُضَـٰعِفُ لِمَن یَشَاۤءُۚ وَٱللَّهُ وَ ٰ⁠سِعٌ عَلِیمٌ
+        </div>
     </div>
+
+    <div class="right-image">
+        <img src="2.png">
+    </div>
+
+  </div>
+
+    
 
     <script>
         const prayerData = [
@@ -3663,7 +3708,13 @@
             const datePart = dObj.Datum.split(' ')[0];
             return new Date(datePart + 'T' + timeStr);
         }
-
+              function addMinutes(timeStr, minutesToAdd) {
+                  const [h, m] = timeStr.split(":").map(Number);
+                  const date = new Date();
+                  date.setHours(h);
+                  date.setMinutes(m + minutesToAdd);
+                  return date.toTimeString().slice(0,5);
+               }
         function update() {
             const now = new Date();
             document.getElementById('clock').innerText =
@@ -3716,7 +3767,7 @@
 
                 row.innerHTML =
                     `<td>${labels[p].ar} <span class="swedish-text">${labels[p].sv}</span></td>
-                     <td>${p === "Shuruq" ? "-" : displayData[p]}</td>
+                     <td>${p === "Shuruq" ? "-" : addMinutes(displayData[p], p === "Maghrib" ? 5 : 10)}</td>
                      <td>${displayData[p]}</td>`;
 
                 tbody.appendChild(row);
